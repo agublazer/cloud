@@ -57,12 +57,12 @@ def index():
 	file_name = request.get_json(force=True)
 	print('file name', file_name)
 	s3.download_file('cloud-ucsp', file_name, file_name)
-	s3.download_file('cloud-ucsp', 'resnet34.pt', 'resnet34.pt')
+	# s3.download_file('cloud-ucsp', 'resnet34.pt', 'resnet34.pt')
 	model = torch.jit.load('resnet34.pt')
 	result = classify_video(model, file_name)
 	s3.upload_file(file_name, 'cloud-ucsp', file_name[:-4] + '-' + str(result) + '.mp4')
 	os.remove(file_name)
-	os.remove('resnet34.pt')
+	# os.remove('resnet34.pt')
 	s3.delete_object(Bucket='cloud-ucsp', Key=file_name)
 	return {'statusCode': 200, 'body': result}
 
